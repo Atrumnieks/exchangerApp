@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="com.rudolfs.exchangerapp.MainActivity">
+    tools:context="com.rudolfs.exchangerapp.ExchangerActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -25,10 +25,10 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/fragment"
-        android:name="com.rudolfs.exchangerapp.CurrencyFragment"
+        android:name="com.rudolfs.exchangerapp.ExchangerFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:layout="@layout/fragment_currency" />
+        tools:layout="@layout/fragment_exchanger" />
 
 </android.support.design.widget.CoordinatorLayout>

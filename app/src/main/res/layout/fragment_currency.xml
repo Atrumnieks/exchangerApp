@@ -9,34 +9,45 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.rudolfs.exchangerapp.MainActivityFragment"
+    tools:context="com.rudolfs.exchangerapp.CurrencyFragment"
     tools:showIn="@layout/activity_main">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
 
         <android.support.v7.widget.AppCompatSpinner
-            android:layout_width="64dp"
+            android:id="@+id/currency_from"
+            android:layout_width="80dp"
             android:layout_height="wrap_content"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="-"/>
+            android:text="@string/currency_divider_symbol"/>
 
         <android.support.v7.widget.AppCompatSpinner
-            android:layout_width="64dp"
+            android:id="@+id/currency_to"
+            android:layout_width="80dp"
             android:layout_height="wrap_content"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="chart"/>
+            android:layout_weight="1"
+            android:text="@string/currency_chart_value"/>
+
+        <Button
+            android:id="@+id/currency_btn_exchange"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/currency_btn_exchange_text"/>
     </LinearLayout>
 
     <View
+        android:id="@+id/currency_chart_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"/>
@@ -46,19 +57,25 @@
         android:layout_height="wrap_content">
 
         <Button
+            android:id="@+id/currency_chart_yearly"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:text="@string/currency_chart_yearly"/>
 
         <Button
+            android:id="@+id/currency_chart_monthly"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:text="@string/currency_chart_monthly"/>
 
         <Button
+            android:id="@+id/currency_chart_daily"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:text="@string/currency_chart_daily_bold"/>
     </LinearLayout>
 
 </LinearLayout>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="currency_from_to_values">
+        <item>@string/currency_value_AUD</item>
+        <item>@string/currency_value_BGN</item>
+        <item>@string/currency_value_BRL</item>
+        <item>@string/currency_value_CAD</item>
+        <item>@string/currency_value_CHF</item>
+        <item>@string/currency_value_CNY</item>
+        <item>@string/currency_value_CZK</item>
+        <item>@string/currency_value_DKK</item>
+        <item>@string/currency_value_EUR</item>
+        <item>@string/currency_value_GBP</item>
+        <item>@string/currency_value_HKD</item>
+        <item>@string/currency_value_HRK</item>
+        <item>@string/currency_value_HUF</item>
+        <item>@string/currency_value_IDR</item>
+        <item>@string/currency_value_ILS</item>
+        <item>@string/currency_value_INR</item>
+        <item>@string/currency_value_JPY</item>
+        <item>@string/currency_value_KRW</item>
+        <item>@string/currency_value_MXN</item>
+        <item>@string/currency_value_MYR</item>
+        <item>@string/currency_value_NOK</item>
+        <item>@string/currency_value_NZD</item>
+        <item>@string/currency_value_PHP</item>
+        <item>@string/currency_value_PLN</item>
+        <item>@string/currency_value_RON</item>
+        <item>@string/currency_value_RUB</item>
+        <item>@string/currency_value_SEK</item>
+        <item>@string/currency_value_SGD</item>
+        <item>@string/currency_value_THB</item>
+        <item>@string/currency_value_TRY</item>
+        <item>@string/currency_value_USD</item>
+        <item>@string/currency_value_ZAR</item>
+    </string-array>
+</resources>

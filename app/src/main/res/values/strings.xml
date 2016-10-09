@@ -1,4 +1,58 @@
 <resources>
+    <!-- App values -->
     <string name="app_name">ExchangerApp</string>
+
+    <!-- Action bar values -->
     <string name="action_settings">Settings</string>
+
+    <!-- Currency fragment values -->
+    <string name="currency_divider_symbol">-</string>
+    <string name="currency_chart_value">chart</string>
+    <string name="currency_btn_exchange_text">Exchange</string>
+
+    <string name="currency_chart_yearly">Yearly</string>
+    <string name="currency_chart_yearly_bold"><b>Yearly</b></string>
+    <string name="currency_chart_monthly">Monthly</string>
+    <string name="currency_chart_monthly_bold"><b>Monthly</b></string>
+    <string name="currency_chart_daily">Daily</string>
+    <string name="currency_chart_daily_bold"><b>Daily</b></string>
+
+    <string name="currency_value_AUD">AUD</string>
+    <string name="currency_value_BGN">BGN</string>
+    <string name="currency_value_BRL">BRL</string>
+    <string name="currency_value_CAD">CAD</string>
+    <string name="currency_value_CHF">CHF</string>
+    <string name="currency_value_CNY">CNY</string>
+    <string name="currency_value_CZK">CZK</string>
+    <string name="currency_value_DKK">DKK</string>
+    <string name="currency_value_EUR">EUR</string>
+    <string name="currency_value_GBP">GBP</string>
+    <string name="currency_value_HKD">HKD</string>
+    <string name="currency_value_HRK">HRK</string>
+    <string name="currency_value_HUF">HUF</string>
+    <string name="currency_value_IDR">IDR</string>
+    <string name="currency_value_ILS">ILS</string>
+    <string name="currency_value_INR">INR</string>
+    <string name="currency_value_JPY">JPY</string>
+    <string name="currency_value_KRW">KRW</string>
+    <string name="currency_value_MXN">MXN</string>
+    <string name="currency_value_MYR">MYR</string>
+    <string name="currency_value_NOK">NOK</string>
+    <string name="currency_value_NZD">NZD</string>
+    <string name="currency_value_PHP">PHP</string>
+    <string name="currency_value_PLN">PLN</string>
+    <string name="currency_value_RON">RON</string>
+    <string name="currency_value_RUB">RUB</string>
+    <string name="currency_value_SEK">SEK</string>
+    <string name="currency_value_SGD">SGD</string>
+    <string name="currency_value_THB">THB</string>
+    <string name="currency_value_TRY">TRY</string>
+    <string name="currency_value_USD">USD</string>
+    <string name="currency_value_ZAR">ZAR</string>
+
+    <!-- Exchange fragment values  -->
+    <string name="title_activity_exchanger">Exchange</string>
+    <string name="exchanger_favorite_text">Report changes</string>
+    <string name="exchanger_input_title">%1$s:</string>
+    <string name="exchanger_input_hint">Enter some value</string>
 </resources>
