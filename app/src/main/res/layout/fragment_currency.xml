@@ -46,7 +46,7 @@
             android:text="@string/currency_btn_exchange_text"/>
     </LinearLayout>
 
-    <View
+    <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/currency_chart_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
