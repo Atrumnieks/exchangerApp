@@ -14,7 +14,8 @@ import android.widget.TextView;
 import java.math.BigDecimal;
 
 /**
- * A placeholder fragment containing a simple view.
+ * Fragment which contains information about currency from-to
+ * and allows user to calculate currency both ways.
  */
 public class ExchangerFragment extends Fragment {
 
@@ -36,6 +37,7 @@ public class ExchangerFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_exchanger, container, false);
 
+        // Receive data from currency fragment
         Intent intent = getActivity().getIntent();
         if (intent != null && intent.hasExtra(EXTRA_CURRENCY_FROM) && intent.hasExtra(EXTRA_CURRENCY_TO)) {
             final String currencyFrom = intent.getStringExtra(EXTRA_CURRENCY_FROM);

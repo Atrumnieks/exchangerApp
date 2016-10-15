@@ -35,9 +35,10 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 /**
- * A placeholder fragment containing a simple view.
+ * Fragment that allows user to choose two currencies to see their exchange rate
+ * and shows 3 charts in different time periods.
  */
-public class CurrencyFragment extends RxFragment implements AdapterView.OnItemSelectedListener {
+public class CurrencyFragment extends RxFragment implements AdapterView.OnItemSelectedListener, View.OnClickListener {
 
     private static final String LOG_TAG = CurrencyFragment.class.getSimpleName();
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
@@ -45,8 +46,11 @@ public class CurrencyFragment extends RxFragment implements AdapterView.OnItemSe
     private AppCompatSpinner currencyFromSpinner;
     private AppCompatSpinner currencyToSpinner;
     private LineChart currencyChart;
+    private Button btnDaily, btnMonthly, btnYearly;
+
     private CurrencyData currencyData;
     private Subscription currencySub;
+    private Subscription ratioSub;
 
     public CurrencyFragment() {}
 
@@ -55,17 +59,25 @@ public class CurrencyFragment extends RxFragment implements AdapterView.OnItemSe
         View rootView = inflater.inflate(R.layout.fragment_currency, container, false);
         currencyData = new CurrencyData();
 
-        // Currency selectors from - to and chart
         currencyFromSpinner = (AppCompatSpinner) rootView.findViewById(R.id.currency_from);
         currencyToSpinner = (AppCompatSpinner) rootView.findViewById(R.id.currency_to);
 
         currencyChart = (LineChart) rootView.findViewById(R.id.currency_chart_view);
+        currencyChart.getXAxis().setValueFormatter(currencyData);
         currencyChart.setDescription(null);
         currencyChart.setTouchEnabled(true);
         currencyChart.setDragEnabled(true);
         currencyChart.setScaleEnabled(true);
         currencyChart.setPinchZoom(true);
 
+        btnDaily = (Button) rootView.findViewById(R.id.btn_chart_daily);
+        btnDaily.setOnClickListener(this);
+        btnMonthly = (Button) rootView.findViewById(R.id.btn_chart_monthly);
+        btnMonthly.setOnClickListener(this);
+        btnYearly = (Button) rootView.findViewById(R.id.btn_chart_yearly);
+        btnYearly.setOnClickListener(this);
+
+        // Populate from - to currency choosers
         ArrayAdapter<CharSequence> currencyFromToAdapter = ArrayAdapter.createFromResource(getActivity(), R.array.currency_from_to_values, android.R.layout.simple_spinner_item);
         currencyFromToAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         currencyFromSpinner.setAdapter(currencyFromToAdapter);
@@ -80,13 +92,11 @@ public class CurrencyFragment extends RxFragment implements AdapterView.OnItemSe
             Intent exchangeIntent = new Intent(getActivity(), ExchangerActivity.class);
             exchangeIntent.putExtra(ExchangerFragment.EXTRA_CURRENCY_FROM, (String) currencyFromSpinner.getSelectedItem());
             exchangeIntent.putExtra(ExchangerFragment.EXTRA_CURRENCY_TO, (String) currencyToSpinner.getSelectedItem());
-            exchangeIntent.putExtra(ExchangerFragment.EXTRA_CURRENCY_RATIO, String.valueOf(currencyData.getLatesRatio()));
+            exchangeIntent.putExtra(ExchangerFragment.EXTRA_CURRENCY_RATIO, String.valueOf(currencyData.getLatestRatio()));
             startActivity(exchangeIntent);
         });
 
-        // TODO - Get currency data
         getData();
-
         return rootView;
     }
 
@@ -98,31 +108,64 @@ public class CurrencyFragment extends RxFragment implements AdapterView.OnItemSe
     @Override
     public void onNothingSelected(AdapterView<?> parent) {}
 
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+        currencyChart.clear();
+        switch (id) {
+            case R.id.btn_chart_daily:
+                currencyChart.setData(currencyData.getDailyLineData());
+            case R.id.btn_chart_monthly:
+                currencyChart.setData(currencyData.getMonthlyLineData());
+            case R.id.btn_chart_yearly:
+                currencyChart.setData(currencyData.getYearlyLineData());
+        }
+        currencyChart.invalidate();
+        btnDaily.setEnabled(id == R.id.btn_chart_daily ? false : true);
+        btnMonthly.setEnabled(id == R.id.btn_chart_monthly ? false : true);
+        btnYearly.setEnabled(id == R.id.btn_chart_yearly ? false : true);
+    }
+
     private void getData() {
         currencyData.clearData();
         String currencyFrom = (String) currencyFromSpinner.getSelectedItem();
         String currencyTo = (String) currencyToSpinner.getSelectedItem();
 
         // Get currency exchange rate
+        if (ratioSub == null || ratioSub.isUnsubscribed()) {
+            ratioSub = Single.create(sub -> {
+                String ratioJsonStr = getCurrencyRatioJson(currencyFrom, currencyTo, Calendar.getInstance().getTime());
+                currencyData.setLatestRatio(getCurrencyRatio(ratioJsonStr, currencyTo));
+
+                sub.onSuccess(null);
+            })
+                    .compose(bindToLifecycle().forSingle())
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(success -> {
+
+                    }, error -> {
+
+                    });
+        }
+
+        // Get data for charts
         if (currencySub == null || currencySub.isUnsubscribed()) {
             currencySub = Single.create(sub -> {
                 for (Date yearlyDate : currencyData.getYearlyDates()) {
                     String currencyJsonStr = getCurrencyRatioJson(currencyFrom, currencyTo, yearlyDate);
-                    currencyData.addYearlyData(yearlyDate, getCurrencyRatio(currencyJsonStr, currencyTo));
+                    currencyData.addYearlyData(getCurrencyRatio(currencyJsonStr, currencyTo));
                 }
 
                 for (Date monthlyDate : currencyData.getMonthlyDates()) {
                     String currencyJsonStr = getCurrencyRatioJson(currencyFrom, currencyTo, monthlyDate);
-                    currencyData.addMonthlyData(monthlyDate, getCurrencyRatio(currencyJsonStr, currencyTo));
+                    currencyData.addMonthlyData(getCurrencyRatio(currencyJsonStr, currencyTo));
                 }
 
                 for (Date dailyDate : currencyData.getDailyDates()) {
                     String currencyJsonStr = getCurrencyRatioJson(currencyFrom, currencyTo, dailyDate);
-                    currencyData.addDailyData(dailyDate, getCurrencyRatio(currencyJsonStr, currencyTo));
+                    currencyData.addDailyData(getCurrencyRatio(currencyJsonStr, currencyTo));
                 }
-
-                String latestRatio = getCurrencyRatioJson(currencyFrom, currencyTo, Calendar.getInstance().getTime());
-                currencyData.setLatesRatio(getCurrencyRatio(latestRatio, currencyTo));
 
                 sub.onSuccess(null);
             })
@@ -135,21 +178,10 @@ public class CurrencyFragment extends RxFragment implements AdapterView.OnItemSe
 
                         // After data is gathered, generate chart
                         currencyData.generateLineData();
-                        currencyChart.setData(currencyData.getYearlyLineData());
-                        currencyChart.getXAxis().setValueFormatter(new AxisValueFormatter() {
-                            @Override
-                            public String getFormattedValue(float value, AxisBase axis) {
-                                String dateFloat = String.valueOf(value);
-//                                Log.d(LOG_TAG, "Formating x axis: " + dateFloat);
-                                return dateFloat.substring(0, 4) + "-" + dateFloat.substring(4, 6) + "-" + dateFloat.substring(6, 8);
-                            }
-
-                            @Override
-                            public int getDecimalDigits() {
-                                return 0;
-                            }
-                        });
+                        currencyChart.setData(currencyData.getDailyLineData());
                         currencyChart.invalidate();
+                        btnMonthly.setEnabled(true);
+                        btnYearly.setEnabled(true);
                     }, error -> {
                         Log.e(LOG_TAG, error.getMessage(), error);
                     });
@@ -177,7 +209,6 @@ public class CurrencyFragment extends RxFragment implements AdapterView.OnItemSe
             InputStream inputStream = urlConnection.getInputStream();
             StringBuffer buffer = new StringBuffer();
             if (inputStream == null) {
-                // Nothing to do.
                 return null;
             }
             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
@@ -190,6 +221,7 @@ public class CurrencyFragment extends RxFragment implements AdapterView.OnItemSe
             if (buffer.length() == 0) {
                 return null;
             }
+//            Log.d(LOG_TAG, "Recieved json: " + buffer.toString());
 
             return buffer.toString();
         } catch (Exception e) {
